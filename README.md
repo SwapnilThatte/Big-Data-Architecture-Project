@@ -1,50 +1,47 @@
-# Welcome to your Expo app 👋
+# RTD Transit App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This repository contains:
 
-## Get started
+- An Expo mobile client for browsing nearby RTD transit data
+- A FastAPI service that exposes GTFS-backed transit endpoints
+- A separate live data collector that can ingest GTFS-realtime feeds
 
-1. Install dependencies
+The frontend and API are now wired to be deployment-compatible on GCP without requiring full live integration on day one.
+
+## Frontend setup
+
+1. Install dependencies:
 
    ```bash
    npm install
    ```
 
-2. Start the app
+2. Copy the example environment file and point it at your deployed API:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Set `EXPO_PUBLIC_API_BASE_URL` to your HTTPS FastAPI URL, for example:
+
+   ```bash
+   EXPO_PUBLIC_API_BASE_URL=https://rtd-api-xxxxx-uc.a.run.app
+   ```
+
+4. Start the Expo app:
 
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+If the API URL is missing or unreachable, the app keeps rendering the current UI shell and shows fallback cards instead of crashing.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Backend setup
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+API setup and Cloud Run notes live in [api/README.md](api/README.md).
 
-## Get a fresh project
+## Architecture notes
 
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- The API expects preloaded static GTFS tables such as `stops`, `routes`, `trips`, `stop_times`, and `shapes`.
+- GTFS-realtime ingestion remains a separate deployment concern under `live_data/`.
+- Redis-backed realtime enrichment is optional in this phase; the API will return valid JSON even when realtime data is unavailable.
