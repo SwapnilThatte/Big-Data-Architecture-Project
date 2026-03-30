@@ -1,4 +1,5 @@
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import {useRouter} from 'expo-router';
 
 export default function BusCard({
   route = 'RTD',
@@ -6,8 +7,15 @@ export default function BusCard({
   stop = 'No stop information available yet',
   minutes = '--',
   color = '#808080',
+  nextArrivals = [],
 }) {
+    const router = useRouter();
     return (
+      <TouchableOpacity onPress={() => router.push({
+        pathname: '/route-detail',
+        params: { route, destination, stop, minutes, color, nextArrivals: JSON.stringify(nextArrivals)},
+      })}>
+
         <View style={[styles.card, { backgroundColor: color }]}>
           <Text style={styles.routeName}>{route}</Text>
           <View style={styles.cardMid}>
@@ -16,6 +24,7 @@ export default function BusCard({
           </View>
           <Text style={styles.minutes}>{minutes}</Text>
         </View>
+      </TouchableOpacity>
       );
     }
     const styles = StyleSheet.create({
