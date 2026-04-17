@@ -9,12 +9,14 @@ export default function BusCard({
   delay = null,
   color = '#808080',
   nextArrivals = [],
+  routeId = null,
+  stopId = null,
 }) {
     const router = useRouter();
     return (
       <TouchableOpacity onPress={() => router.push({
         pathname: '/route-detail',
-        params: { route, destination, stop, minutes, color, nextArrivals: JSON.stringify(nextArrivals)},
+        params: { route, destination, stop, minutes, color, nextArrivals: JSON.stringify(nextArrivals), routeId, stopId },
       })}>
 
         <View style={[styles.card, { backgroundColor: color }]}>
