@@ -1,8 +1,9 @@
+import json
 import logging
 import redis.asyncio as redis
 
 class RedisClient:
-    def __init__(self, redis_url: str | None):
+    def __init__(self, redis_url: str | None, ttl: int = 900):
         self.redis_url = redis_url
         self.redis_pool = None
         self.ttl = ttl
